@@ -657,6 +657,76 @@ func (c *ClusterHealthCollector) collect() error {
 				c.SlowRequests.Set(float64(v))
 			}
 		}
+		if k == "PG_DEGRADED" {
+                         matched := degradedRegex.FindStringSubmatch(check.Summary.Message)
+                         if len(matched) == 2 {
+                                 v, err := strconv.Atoi(matched[1])
+                                 if err != nil {
+                                         return err
+                                 }
+                                 c.DegradedPGs.Set(float64(v))
+                         }
+                         matched = stuckDegradedRegex.FindStringSubmatch(check.Summary.Message)
+                         if len(matched) == 2 {
+                                 v, err := strconv.Atoi(matched[1])
+                                 if err != nil {
+                                         return err
+                                 }
+                                 c.StuckDegradedPGs.Set(float64(v))
+                         }
+                         matched = undersizedRegex.FindStringSubmatch(check.Summary.Message)
+                         if len(matched) == 2 {
+                                 v, err := strconv.Atoi(matched[1])
+                                 if err != nil {
+                                         return err
+                                 }
+                                 c.UndersizedPGs.Set(float64(v))
+                         }
+                         matched = stuckUndersizedRegex.FindStringSubmatch(check.Summary.Message)
+                         if len(matched) == 2 {
+                                 v, err := strconv.Atoi(matched[1])
+                                 if err != nil {
+                                         return err
+                                 }
+                                 c.StuckUndersizedPGs.Set(float64(v))
+                         }
+                         matched = uncleanRegex.FindStringSubmatch(check.Summary.Message)
+                         if len(matched) == 2 {
+                                 v, err := strconv.Atoi(matched[1])
+                                 if err != nil {
+                                         return err
+                                 }
+                                 c.UncleanPGs.Set(float64(v))
+                         }
+                         matched = stuckUncleanRegex.FindStringSubmatch(check.Summary.Message)
+                         if len(matched) == 2 {
+                                 v, err := strconv.Atoi(matched[1])
+                                 if err != nil {
+                                         return err
+                                 }
+                                 c.StuckUncleanPGs.Set(float64(v))
+                         }
+                 }
+		if k == "PG_STALE" {
+                         matched := staleRegex.FindStringSubmatch(check.Summary.Message)
+                         if len(matched) == 2 {
+                                 v, err := strconv.Atoi(matched[1])
+                                 if err != nil {
+                                         return err
+                                 }
+                                 c.StalePGs.Set(float64(v))
+                         }
+                         matched = stuckStaleRegex.FindStringSubmatch(check.Summary.Message)
+                         if len(matched) == 2 {
+                                 v, err := strconv.Atoi(matched[1])
+                                 if err != nil {
+                                         return err
+                                 }
+                                 c.StuckStalePGs.Set(float64(v))
+                         }
+                 }
+		if k == "PG_UNDERSIZED" {
+                 }
 	}
 
 	osdsUp, err := stats.OSDMap.OSDMap.NumUpOSDs.Float64()
